@@ -1,4 +1,4 @@
-
+My notes for this course.
 
 [toc]
 
@@ -57,11 +57,258 @@ DI is the implementation of IoC
 - Allows concurrent or independent development
 - Replacing modules has no side effect on other modules 
 
-## 1.1 Spring Beans
+## 1.0.3 Spring Beans
 
 Any normal Java class (POJO plain old java object) that is instantiated, assembled, and otherwise managed by Spring IoC container is called **Spring Bean**.
 
+These beans are created by using **XML configs** and **Annotations**.
 
+Spring IoC Container managers the lifecycle of Spring Bean scope and injecting any required dependencies in the bean.
+
+Context is like a memory location of the app in which we add all the object instances that we want the framework to manage. 
+
+The SpEL provides a powerful expression language for querying and manipulating an object graph at runtime like setting and getting property values, property assignment, method invocation etc.
+
+## 1.0.4 Spring IoC Container
+
+------------------------------------------Application classes(POJOs)
+
+​                                                                      ↓
+
+Configuration instructions→|Spring Application Context |
+
+​                                                                       ↓
+
+​                                                      Creates fully configured app, ready for use
+
+
+
+Config is how to create Beans
+
+Context is the Container for Beans
+
+
+
+## 1.1 Add new beans to spring context
+
+### 1.1.1 @Bean Annotation
+
+```java
+@Bean
+Vehicle vehicle(){
+    var veh = new Vehicle();
+    veh.setName("Audi");
+    return veh;
+}
+```
+
+### 1.1.2 NoUniqueBeanDefinitionException
+
+```java
+ @Bean(name = "audi")
+    Vehicle vehicle1() {
+        Vehicle veh = new Vehicle();
+        veh.setName("Audi");
+        return veh;
+    }
+
+    @Bean(name = "honda")
+    Vehicle vehicle2() {
+        Vehicle veh = new Vehicle();
+        veh.setName("Honda");
+        return veh;
+    }
+
+    @Bean(name="ferrari")
+    Vehicle vehicle3(){
+        Vehicle vehicle = new Vehicle();
+        vehicle.setName("Ferrari");
+        return vehicle;
+
+    }
+```
+
+Solutions
+
+- Fetch the bean from the context by mentioning it's name
+
+  ```java
+  context.getBean("vehicle1",Vehicle.class);
+  ```
+
+- `@Primary` Annotation to indicate the default bean
+
+### 1.1.3 Stereotype annotations
+
+Using @ComponentScan annotation over the configuration class, instruct Spring on where to find the classes marked with stereotype annotations.
+
+```java
+@Configuration
+@ComponentScan(basePackages = "com.example.beans")
+public class ProjectConfig {
+}
+```
+
+#### 1.1.3.1 @Component
+
+@Component is one of the most commonly used stereotype annotation to create and add a bean to the Spring context by wiring less code compared to @Bean option.
+
+It's used as general on top of any Java class. It is the base for other annotations.
+
+####  1.1.3.2 @Service
+
+can be used on top of the classes inside the service layer especially where we write business logic and make external API calls.
+
+#### 1.1.3.3 @Repository
+
+Can be used on top of the classes which handles the code related to Database access related operations like Insert, Update, Delete etc.
+
+#### 1.1.3.4 @Controller
+
+can be used on top of the classes inside the Controller layer of MVC applications.
+
+### 1.1.4 @Bean vs @Component
+
+### 1.1.5 @PostConstruct & @PreDestroy
+
+In class with @Component annotation, @PostConcstruct & @PreDestroy can be used before a method, which instructs Spring to execute the method after it finishes creating the bean or call this method just before clearing and destroying the context.
+
+Spring borrows these two annotations from Java EE 
+
+`import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy; `
+
+### 1.1.6 Add new Beans programmatically
+
+From Sping 5, registerBean() can be invoked inside the context object.
+
+`context.registerBean("beanName",beanType.class,instanceSupplier);`
+
+### 1.1.7 Add new Beans using XML configs
+
+xml file
+
+```xml
+<bean id="vehicle" class="com.example.beans.Vehicle">
+    <property name="name" value="Honda" />
+</bean>
+```
+
+Create Bean
+
+```java
+var context = new ClassPathXmlApplicationContext("beans.xml");
+Vehicle vehicle = context.getBean(Vehicle.class);
+System.out.println(vehicle.getName())
+```
+
+## 1.2 Beans wiring inside Spring
+
+### 1.2.1 Method call
+
+```java
+    @Bean
+    public Vehicle vehicle() {
+        Vehicle vehicle = new Vehicle();
+        vehicle.setName("Toyota");
+        return vehicle;
+    }
+
+
+    @Bean
+    public Person person() {
+        Person person = new Person();
+        person.setName("Lucy");
+        person.setVehicle(vehicle());
+        return person;
+    }
+
+```
+
+### 1.2.2 Method parameters
+
+```java
+    @Bean
+    public Vehicle vehicle() {
+        Vehicle vehicle = new Vehicle();
+        vehicle.setName("Toyota");
+        return vehicle;
+    }
+
+    @Bean
+    public Person person(Vehicle vehicle) {
+        Person person = new Person();
+        person.setName("Lucy");
+        person.setVehicle(vehicle);
+        return person;
+    }
+```
+
+### 1.2.3 @Autowired on class fields
+
+```java
+@Autowired
+private Vehicle vechile;
+```
+
+Spring injects/auto-wire the vehicle bean to person bean through a class field and dependency injection.
+
+It is **not** recommended for production usage as we can't mark the fields as final.
+
+**`@Autowired(required = false)`** will help to avoid the NoSuchBeanDefinitionException if the bean is not available during Autowiring process.
+
+### 1.2.4 @Autowired on setter method
+
+```java
+@Component
+public class Person {
+
+    private String name="Lucy";
+...
+    @Autowired
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+}
+```
+
+It is **not** recommended for production usage as we can't mark the fields as final and not readable friendly.
+
+### 1.2.5 @Autowired with constructor
+
+```java
+@Component
+public class Person {
+
+    private String name="Lucy";
+	private final Vehicle vehicle;
+    
+    @Autowired
+    public Person(Vehicle vehicle){
+        System.out.println("Person bean created by Spring");
+        this.vehicle = vehicle;
+    }
+    ...
+}
+```
+
+From Spring version 4.3, when we only have one constructor in the class, writing the @Autowired annotation is optional.
+
+### 1.2.6 How Autowiring works with multiple Beans of same type
+
+If the Spring context has multiple beans of same class type, then Spring will try to auto-wire based on the parameter name/field name that we use while configuring autowiring annotation.
+
+- Specify the bean name: `public Person( Vehicle vehicle1){...}`
+- @Primary annotation will be the default one
+- Using @Qualifier annotation `public Person(@Qualifier("vehicle2" Vehicle vehicle)){...}`
+
+### 1.2.7 Circular dependencies
+
+If 2 beans are waiting for each to create inside the Spring context in order to do auto-wiring.
+
+E.G.
+
+Where Person has a dependency on Vehicle and Vehicle has a dependency on Person. In such scenarios, Spring will throw **UnsatisfiedDependencyException** due to circular reference.
 
 #####  Dependency Injection (DI)
 
