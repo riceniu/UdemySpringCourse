@@ -1,2 +1,14 @@
 # Project exclude paths
 /example4/target/
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+.DS_Store
+
+HELP.md
+target/
+#!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
