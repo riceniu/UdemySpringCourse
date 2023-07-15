@@ -10,6 +10,7 @@
         <option value="$PROJECT_DIR$/example12/pom.xml" />
         <option value="$PROJECT_DIR$/example13/pom.xml" />
         <option value="$PROJECT_DIR$/example14-BeanScopeSingleton/pom.xml" />
+        <option value="$PROJECT_DIR$/example15-LazyInitialization/pom.xml" />
       </list>
     </option>
   </component>
