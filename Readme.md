@@ -310,36 +310,76 @@ E.G.
 
 Where Person has a dependency on Vehicle and Vehicle has a dependency on Person. In such scenarios, Spring will throw **UnsatisfiedDependencyException** due to circular reference.
 
-#####  Dependency Injection (DI)
+## 1.3 Bean Scopes inside Spring
 
-##### Aspect-Oriented Programming (AOP)
+There are 5 bean scopes inside Spring
 
-1. Different approaches of Beans creation inside Spring framework
-2. Bean Scopes inside Spring framework
-3. Autowiring of the Spring Beans
-4. Lombok library and Annotations
-5. Introduction to MVC pattern & overview of web apps
-6. Spring MVC internal architecture & how to create web applications using Spring MVC & Thymeleaf
-7. Spring MVC Validations
-8. How to build dynamic web apps using Thymeleaf & Spring
-9. Thymeleaf integration with Spring, Spring MVC, Spring Security
-10. Deep dive on Spring Boot, Auto-configuration
-11. Spring Boot Dev Tools
-12. Spring Boot H2 Database
-13. Securing web applications using Spring Security
-14. Authentication , Authorization, Role based access
-15. Cross-Site Request Forgery (CSRF) & Cross-Origin Resource Sharing (CORS)
-16. Database create, read, update, delete operations using Spring JDBC
-17. Introduction to ORM frameworks & database create, read, update, delete operations using Spring Data JPA/Hibernate
-18. Derived Query methods in JPA
-19. OneToOne, OneToMany, ManyToOne, ManyToMany mappings inside JPA/Hibernate
-20. Sorting, Pagination, JPQL inside Spring Data JPA
-21. Building Rest Services inside Spring
-22. Consuming Rest Services using OpenFeign, Web Client, RestTemplate
-23. Spring Data Rest & HAL Explorer
-24. Logging inside Spring applications
-25. Properties Configuration inside Spring applications
-26. Profiles inside Spring Boot applications
-27. Conditional Bean creation using Profiles
-28. Monitoring Spring Boot applications using SpringBoot Actuator & Spring Boot Admin
-29. Deploying SpringBoot App into cloud using AWS Elastic Beanstalk
+1. Singleton
+2. Prototype
+3. Request
+4. Session
+5. Application
+
+3-5 are Web scopes
+
+### 1.3.1 Singleton bean scope
+
+- Singleton is the **default** scope of a bean in Spring. In this scope, for a single bean we always get a same instance when you refer or autowire inside your application.
+
+- Unlike singleton design pattern where we have only 1 instance in entire app, inside singleton scope Spring will make sure to have **only 1 instance per unique bean**. For example, if you have multiple beans of same type, then Spring Singleton scope will maintain 1 instance per each bean declared of the same type.
+
+### Race condition
+
+A race condition occurs when two threads access a shared variable at the same time. The first thread reads the variable, and the second thread reads the same value from the variable. Then the first thread and second thread perform their operation on the value, and they race to see which thread can write the value last to the shared variable. The value of the thread that writes its value last is preserved, because the thread is writing over the value that the previous thread wrote.
+
+### Use case of singleton beans
+
+- Since the same instance of singleton bean will be used by multiple threads inside your application, it is very important that these beans are immutable
+- This scope is more suitable for beans which handles service layer, repository layer business logics.
+
+1. Building mutable singleton beans, will result in the race conditions inside multi thread environments
+2. There are ways to avoid race conditions due to mutable singleton beans with the help of synchronization
+3. But it is not recommended, since it brings lot of complexity and performance issues inside your app. So please don't try to build mutable singleton beans.
+
+### Eager & lazy instantiation
+
+- By default Spring will create all singleton beans eagerly during the startup of the application itself. This is called Eager instantiation.
+- The initialization of the singleton beans can be changed to be lazily only when the application is trying to refer to the bean.
+
+```java
+@Component
+@Lazy
+public class Person{...}
+```
+
+Eager vs Lazy
+
+| Eager instantiation                                          | Lazy instantiation                                           |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **Default inside Spring**                                    | @Lazy annotation                                             |
+| Bean will be created during startup                          | Bean will be created when the app is trying to refer the bean for the first time |
+| The server will not start if bean is not able to create      | Application will throw an exception runtime if bean creation is failed due to any dependent exceptions |
+| Spring context will occupy lot of memory if all beans are eager | Performance will be impacted if all beans are lazy           |
+| Eager can be followed for all the beans which are required very commonly inside a application | Lazy can be followed for the beans that are used in a very remote scenario inside a application |
+
+### 1.3.2 Prototype bean scope
+
+- With prototype scope, every time we request a reference of a bean, Spring will create a new object instance and provide.
+- Prototype scope is rarely used inside the applications and we can use this scope only in the scenarios where your bean will frequently change the state of the data which will result race conditions inside multi thread environment. Using prototype scope will not create any race conditions.
+
+```java
+@Component
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
+public class VehicleServices{...}
+```
+
+### 1.3.3 Singleton vs prototype
+
+| Singleton scope                                              | Prototype scope                                              |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Default                                                      | @Scope(BeanDefinition.SCOPE_PROTOTYPE)                       |
+| The same object instance will be returned every time we refer a bean inside the code | New object instance will be returned every time we refer a bean inside the code |
+| We can configure to create the beans during the start up or when the first time referred | Spring always creates new object when we try to refer the bean. No eager instantiation is possible. |
+| Immutable objects can be idle for Singleton scope            | Mutable objects can be idle for prototype scope              |
+| Most commonly used                                           | Rarely used                                                  |
+
