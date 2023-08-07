@@ -383,3 +383,97 @@ public class VehicleServices{...}
 | Immutable objects can be idle for Singleton scope            | Mutable objects can be idle for prototype scope              |
 | Most commonly used                                           | Rarely used                                                  |
 
+## 1.4 Aspect-Oriented Programming(AOP)
+
+- An aspect is simply a piece of code the Spring framework executes when you call specific methods inside your app.
+- Spring AOP enables AOP in spring applications. In AOP, aspects enable the modularization of concerns such as transaction management, logging or security that cut across multiple types and objects( often termed crosscutting concerns).
+
+1. AOP provides the way to dynamically add the cross-cutting concern before, after or around the actual logic using simple pluggable configurations.
+2. AOP helps in separating and maintaining many non-business logic related code like logging, auditing, security, transaction management.
+3. AOP is a programming paradigm that aims to increase modularity by allowing the separation of cross-cutting concerns. It does this by adding additional behavior to existing code without modifying the code itself.
+
+### AOP Jargons
+
+When we define an Aspect or doing configurations, we need to follow 3Ws
+
+- WHAT-> Aspect
+  - What code or logic we want the Spring to execute when you call a specific method. This is called as **Aspect**
+- WHEN-> Advice
+  - When the Spring need to execute the given Aspect. For example is it before or after the method call. This is called as **Advice**.
+- WHICH-> Pointcut
+  - Method inside App that framework need to intercept and execute the given Aspect. This is called as a **Pointcut**.
+- **Join point**: which defines the event that triggers the execution of an aspect. Inside Spring, this event is always a method call.
+- **Target object**: is the bean that declares the method/pointcut which is intercepted by an aspect.
+
+### AOP implementation
+
+Developer want **some logic** ***`Aspect`*** to be executed **before** ***`Advice`*** each **execution** ***`Joinpoint`*** of method **playMusic()** ***`Pointcut`*** present inside the bean **VehicleServices** ***`Target Object`***.
+
+### Weaving inside AOP
+
+- When we are implementing AOP inside our App using Spring framework, it will intercept each method call and apply the logic defined in the Aspect.
+- Spring does this with the help of **proxy object**. So we try to invoke a method inside a bean, Spring instead of directly giving reference of the bean instead it will give proxy object that will manage the each call to a method and apply the aspect logic. This process is called **Weaving**.
+
+Without AOP, method is directly called and no interception by Spring
+
+intercept -> Proxy object of VehicleServices Bean -> delegate -> VehicleServices Bean {void playMusik(){//Business logic}}
+
+With AOP, method executions will be intercepted by proxy object and aspect will be executed. Post that actual method invocation will be happen.
+
+### Advice types inside AOP
+
+- @Before: runs before a matched method execution
+- @AfterReturning: runs when a matched method execution completes normally
+- @AfterThrowing: runs when a matched method execution exits by throwing an exception
+- @After: runs no matter how a matched method execution exits
+- @Around: runs "around" a matched method execution. It has the opportunity to do work both before and after the method runs and to determin when, how and even if the method actually gets to run at all.
+
+### Configuring Advices inside AOP with AspectJ
+
+- We can use AspectJ pointcut expression to provide details to Spring about what kinds of method it needs to intercept by mentioning details around **modifier, return type, name pattern, package name pattern, params pattern, exceptions pattern etc.**
+- execution(**modifiers-pattern?** **ret-type-pattern?** **declaring-type-pattern?**  **name-pattern(param-pattern)?** **throws-pattern?**)
+
+```java
+@Configuration
+@ComponentScan(basePackages = {"com.example.implementation","com.example.services","com.example.aspects"})
+@EnableAspectJAutoProxy
+public class ProjectConfig{}
+```
+
+```java
+@Aspect
+@Component
+public class LoggerAspect{
+    @Around("execution(* com.example.services.*.*(..))")
+    public void log(ProceedingJoinPoint joinPoint)throws Throwable{
+       // Aspect Logic
+    }
+}
+```
+
+### Configuring Advices with annotations
+
+1. Create an annotation type
+
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface LogAspect{
+}
+```
+
+2. Mention the same annotation on top of the method which we want to intercept using AOP
+
+```java
+@LogAspect
+public String playMusic(boolean started, Song son){}
+```
+
+3. Use the annotation details to configure on top of the aspect method to advice
+
+```java
+@Around("@annotation(com.example.interfaces.LogAspect)")
+public void logWithAnnotation(ProceedingJointPoint joinPoint) throws Throwable{
+}
+```
+
