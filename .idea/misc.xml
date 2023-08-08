@@ -13,6 +13,13 @@
         <option value="$PROJECT_DIR$/example15-LazyInitialization/pom.xml" />
         <option value="$PROJECT_DIR$/example16-PrototypeScope/pom.xml" />
         <option value="$PROJECT_DIR$/example17/pom.xml" />
+        <option value="$PROJECT_DIR$/example_18/pom.xml" />
+        <option value="$PROJECT_DIR$/example_12/pom.xml" />
+        <option value="$PROJECT_DIR$/example_13/pom.xml" />
+        <option value="$PROJECT_DIR$/example_14-BeanScopeSingleton/pom.xml" />
+        <option value="$PROJECT_DIR$/example_15-LazyInitialization/pom.xml" />
+        <option value="$PROJECT_DIR$/example_16-PrototypeScope/pom.xml" />
+        <option value="$PROJECT_DIR$/example_17/pom.xml" />
       </list>
     </option>
   </component>
