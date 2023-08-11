@@ -2,7 +2,8 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-        <profile name="Maven default annotation processors profile" enabled="true">
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -12,6 +13,7 @@
         <module name="example14" />
         <module name="example12" />
         <module name="example7" />
+        <module name="example_23" />
         <module name="example6" />
         <module name="example_21" />
         <module name="example_22" />
@@ -37,6 +39,7 @@
       <module name="example_20" options="-parameters" />
       <module name="example_21" options="-parameters" />
       <module name="example_22" options="-parameters" />
+      <module name="example_23" options="-parameters" />
     </option>
   </component>
 </project>
