@@ -6,7 +6,8 @@
 *.iml
 *.ipr
 .DS_Store
-.zip
+*.zip
+spring-3.1.2.zip
 HELP.md
 target/
 #!.mvn/wrapper/maven-wrapper.jar

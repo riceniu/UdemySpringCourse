@@ -6,17 +6,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="example7" />
-        <module name="example6" />
-        <module name="example_20" />
-        <module name="example4" />
         <module name="example15" />
         <module name="example16" />
-        <module name="example_18" />
         <module name="example13" />
         <module name="example14" />
-        <module name="example_19" />
         <module name="example12" />
+        <module name="example7" />
+        <module name="example6" />
+        <module name="example_21" />
+        <module name="example_22" />
+        <module name="example_20" />
+        <module name="example4" />
+        <module name="example_18" />
+        <module name="example_19" />
         <module name="example_17" />
       </profile>
     </annotationProcessing>
@@ -33,6 +35,8 @@
       <module name="example_18" options="-parameters" />
       <module name="example_19" options="-parameters" />
       <module name="example_20" options="-parameters" />
+      <module name="example_21" options="-parameters" />
+      <module name="example_22" options="-parameters" />
     </option>
   </component>
 </project>
