@@ -477,3 +477,267 @@ public void logWithAnnotation(ProceedingJointPoint joinPoint) throws Throwable{
 }
 ```
 
+# 2 Overview of a web APP
+
+## 2.1 Overview
+
+![](https://github.com/riceniu/UdemySpringCourse/blob/master/pic/overview_web_app.png?raw=true)
+
+1. The web clients sends a request using protocols like HTTP to Web Application asking some data like list of images, videos, text etc.
+2. The web server where web app is deployed receives the client requests and process the data it receives. Post that it will response to the client's request in the format of HTML, JSON etc.
+3. In Java web apps, **Servlet Container**(Web server) takes care of translating the HTTP messages for Java code to understand. One of the mostly used servlet container is **Apache Tomcat**
+4. Servlet Container converts the HTTP messages into **ServletRequest** and hand over to Servlet method as a parameter. Similarly, **ServletResponse**returns as an output to Servlet Container from Servlet.
+
+## 2.2 Role of Servlet inside WEB APPs
+
+
+
+### Before Spring
+
+![](https://github.com/riceniu/UdemySpringCourse/blob/master/pic/RolesOfServletInsideApps.png?raw=true)
+
+1. Developer has to create a new servlet instance, configure it in the servlet container, and assign it to a specific URL path
+2. When the client sends a request, Tomcat calls a method of the servlet associated with the path the client requested. The servlet gets the values on the request and builds the response that Tomcat sends back to the client.
+
+### With Spring
+
+![](https://github.com/riceniu/UdemySpringCourse/blob/master/pic/RolesOfServletInsideAppsWithSpring.png?raw=true)
+
+1. It defines a servlet called **Dispatcher Servlet** which maintain all the URL mapping inside a web application.
+2. The servlet container calls this Dispatcher Servlet for any client request, allowing the servlet to manage the request and response. This way spring internally does all the magic for *Developers without the need of defining the servlets inside*
+
+## 2.3 Evolution of web apps inside java eco system
+
+![](https://github.com/riceniu/UdemySpringCourse/blob/master/pic/evolutionofwebapps.png?raw=true)
+
+- Somewhere in 2000
+
+  - JSP/JSF
+  - HTML/CSS
+  - Servlets
+  - JDBC
+  - SOAP
+  - J2EE
+
+  No Web Design patterns and frameworks support present in 2000s. So all the web application code is written in such a way all the layers like Presentation, Business, Data layers are tightly coupled.
+
+- Somewhere in 2010
+
+  - JSP/JSF
+  - HTML/CSS
+  - jQuery/Bootstrap
+  - SOAP/REST
+  - MVC
+  - ORM
+
+  With the help & invention of design patterns like MVC and frameworks like Spring, Struts, Hibernate, developers started building web applications separating the layers of Presentation, Business, Data Layers. But all the code deployed into a single jumbo server as monolithic application
+
+- Somewhere in 2020
+
+  - Angula
+  - React JS
+  - Vue.js
+  - HTML/CSS
+  - REST
+  - ORM/JPA
+  - Cloud
+  - Microservices
+  - Docker/K8s
+
+  With the invention of UI frameworks like Angular, React and new tends like Microservices, Containers, developers started building web application by separating UI and backend layers. |The code also deployed into multiple servers using containers and cloud.
+
+## 2.4 Developing web applications using Spring
+
+![](https://github.com/riceniu/UdemySpringCourse/blob/master/pic/developingwithSpring.png?raw=true)
+
+Spring MVC is the key differentiator between these two approaches
+
+## 2.5 Springboot
+
+1. Springboot was introduced in 2014 April to reduce some of the burdens while developing a Java web application.
+2. Before Springboot, developer need to configure a servelet container, establish link b/w Tomcat and Dispatcher servlet, deploy into a server, define lot of dependencies...
+3. But with Springboot, we can create Web Apps skeletons within seconds or at least in 1-2 mins. It helps eliminating all the configurations we need to do.
+4. Springboot is now one of the most appreciated projects in the Spring ecosystem. It helps us to create Spring apps more efficiently and focus on the business code.
+5. Springboot is a mandatory skill now due to the latest trends like Full Stack development, microservices, Serverless, containers, Docker etc.
+
+## 2.6 Before & after Springboot
+
+| DISADVAN                                                     | ADVAN                                                        |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Configure a Maven/Gradle project with all dependencies needed | Springboot automatically configures the bare minimum components of a Spring application |
+| Understand how servlets work & configure the DispatcherServlet inside web.xml | Springboot applications embed a web server so that we do not require an external application server. |
+| Package the web application into a WAR file. Deploy the same into a server | Springboot provides several useful production-ready features out of the box to monitor and manage the applicaiton |
+| Deal with complicated class loading strategies, application monitoring and management |                                                              |
+
+## 2.7 Getting started with Springboot
+
+1. https://start.spring.io/ is the website which can be used to generate web projects skeleton based on the dependencies required for an application.
+2. We can identify the Springboot main class by looking for an annotation @SpringBootApplication
+3. A single @SpringBootApplication annotation can be used to enable those three features
+   1. @EnableAutoConfiguration: enable springboot's auto-configuration mechanism
+   2. @ComponentScan: enable @Component scan on the package where the application is located
+   3. @SpringBootConfiguration: enable registration of extra beans in the context or the import of additional configuration classes. An alternative to Srping's standard @Configuration annotation.
+4. The @RequestMapping annotation provides "routing" information. It tells Spring that any HTTP request with the given path should be mapped to the corresponding method. It is a Spring MVC annotation and not specific to Spring Boot.
+5. server.port and server.servlet.context-path properties can be mentioned inside the applicaiton.properties to change the default port number and context path of a web application. 
+6. Mentioning server.port = 0 will start the web application at a random port number every time.
+7. Mentioning debug=true will print the Autoconfiguration report on the console. We can mention the exclusion list as well for SpringBoot auto-configuration by using the below config: `@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})`
+
+## 2.8 Tip: multiple path for RequestMapping
+
+```java
+@Controller
+public class HomeController{
+    @RequestMapping(value={"","/","home"})
+    public String displayHomePage(Model model){
+        //Business logic
+    }
+}
+```
+
+# 3 Spring family & tools
+
+## 3.1 Themeleaf
+
+- Thymeleaf is a modern server-side Java template engine for both web and standalone environments. This allow developers to build dynamic content inside the web applications.
+- Thymeleaf has great integration with Spring especially with Spring MVC, Spring Security etc.
+- The Thymeleaf + Spring integration packages offer a SpringResourceTemplateResolver implementation which uses all the Spring infrastructure for accessing and reading resources in applications, and which is the recommended implementation in Spring-enabled applications.
+
+## 3.2 Springboot DevTools
+
+- The Spring Boot DevTools provides features like Automatic restart & liveReload that make the application development experience a little more pleasant for developers.
+
+- It can be added into any of the SpringBoot project by adding the below maven dependency
+
+  - ```xml
+    <dependency>
+    	<groupId>org.springframkework.boot</groupId>
+    	<artifactId>spring-boot-devtools</artifactId>
+    </dependency>
+    ```
+
+- DevTools maintains 2 class loaders, one with classes that doesn't change and other one with classes that change. When restart needed it only reload the second class loader which makes restarts faster as well.
+
+- DevTools includes an embedded LiveReload server that can be used to trigger a browser refresh when a resource is changed. LiveReload related browser extensions are freely available for Chrome, Firefox.
+
+- 
+
+  - DevTools triggers a restart when ever a build is triggered through IDE or by maven commands etc.
+  - DevTools disables the caching options by default during development.
+  - Repackaged archives do not contain DevTools by default.
+
+## 3.3 MVC pattern
+
+![](https://github.com/riceniu/UdemySpringCourse/blob/master/pic/MVCpattern.png?raw=true)
+
+Model View Controller Design Pattern: separation of concerns to achieve loose coupling
+
+**Model**: Represents the data of the application like name, age, students like etc. It stores & manages the data.
+
+**View**: Represents UI and usually takes data from the controller and display it with the help of HTML pages.
+
+**Controller**:  Controls the flow ^ decides which business logic needs to be executed. It acts as a Brain inside MVC pattern.
+
+
+
+## 3.4 Spring MVC architecture & internal flow
+
+​		![](https://github.com/riceniu/UdemySpringCourse/blob/master/pic/SpringMVCarchitecture.png?raw=true)
+
+1. Web client makes HTTP request
+2. Servlet Containers like Tomcat accepts the HTTP requests and handovers the Servlet Request to **Dispatcher Servlet** inside Spring Web app
+3. The Dispatcher Servlet will check with the **Handler Mapping** to identify the controller and method names to invoke based on the HTTP method, path etc.
+4. The Dispatcher Servlet will invoke the corresponding controller & method. After execution, the controller will provide a view name and data that needs to be rendered in the view.
+5. The Dispatcher Servlet with the help of a component called view Resolver finds the view and render it with the data provided by controller.
+6. The Servlet Container or Tomcat accept the servlet Response from the Dispatcher servlet and convert the same to HTTP response before returning to the client.
+7. The browser or client intercepts the HTTP response and display the view, data etc.
+
+### Tip: use ViewControllerRegistry to register view controller
+
+By using VieControllerRegistery, we can register view controller that create a direct mapping between the URL and the view name. This way, there's no need for any Controller between the two.
+
+```java
+@Configuration
+public class WebConfig implements WebMvcConfigurer{
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry){
+        registry.addViewController("/courses").setViewName("courses");
+        registry.addViewController("/about").setViewName("about");
+    }
+}
+```
+
+## 3.5 Lombok
+
+- Java expects lot of boilerplate code inside POJO classes like getters and setters.
+- Lombok, which is a Java library provides you with several annotations aimed at avoiding writing Java code known to be repetitive and/or boilerplate.
+- It can be added into any of the Java project by adding the maven dependency
+
+```xml
+<denepdency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+</dependency>
+```
+
+- Project lombok works by plugging into your build process. Then, it will auto-generate the Java bytecode into your .class files required to implement the desired behavior, based on the annotations you used.
+- Most commonly used Lombok annotations,
+  - `@Getter,@Setter`
+  - `@NoArgsConstructor`
+  - `@RequiredArgsConstructor`
+  - `@AllArgsConstructor`
+  - `@ToString,@EqualsAndHashCode`
+  - `@Data`
+- `@Data` is a shortcut annotation that combines the features of below annotations together,
+  - `@ToString`
+  - `@EqualsAndHashCode`
+  - `@Getter,@Setter`
+  - `@RequiedArgsConstructor`
+
+## 3.6 `@RequestParam` annotation
+
+- In Spring `@RequestParam` annotation is used to map either query parameters or form data.
+
+- For example, if we want to get parameters value from a HTTP GET requested URL and we can use @RequestParam annotation like below:
+
+  http://localhost:8080/holidays?festival=true&federal=true
+
+  ```java
+  @GetMapping("/holidays")
+  public String displayHolidays(@RequestParam(required = false) boolean festival,
+                               @RequestParam(required = false) boolean federal){
+      //todo
+      return "holidays.html";
+  }
+  ```
+
+- The @RequestParam annotation supports attributes like name, required, value, defaultvalue. We can use them in our application based on the requirements.
+
+- The **name** attribute indicates the name of the request parameter to bind to.
+
+- The **required** attribute is used to make a field either optional or mandatory. If it is mandatory, an exception will throw in case of missing fields.
+
+- The **value** attribute is similar to name elements and can be used as an alias.
+
+- **defaultValue** for the parameter is to handle missing values or null values. If the parameter does not contain any value then this default value will be considered.
+
+## 3.7 `@PathVariable` annotation
+
+- The @PathVariable annotation is used to extract the value from the URI. It is most suitable for the RESTful web service where the URL contains some value. Spring MVC allows us to use multiple @PathVariable annotations in the same method.
+
+- For example, if we want to get the value from a requested URI path, then we can use @PathVariable annotation like:
+
+  http://localhost:8080/holidays/all
+
+  http://localhost:8080/holidays/federal
+
+  http://localhost:8080/holidays/festival
+
+  ```java
+  @GetMapping("/holidays/{display}")
+  public String displayHolidays(@PathVariable String display){
+      //todo
+      return "holidays.html"
+  }
+  ```
+
+- The @PathVariable annotation supports attributes like **name, required, value** similar to @RequestParam. We can use them in our application based on the requirements.
