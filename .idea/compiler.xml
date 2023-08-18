@@ -24,15 +24,9 @@
         <module name="example_19" />
         <module name="example_17" />
         <module name="example_25" />
+        <module name="example_26" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="example_12" target="17" />
-      <module name="example_13" target="17" />
-      <module name="example_14" target="17" />
-      <module name="example_15" target="17" />
-      <module name="example_16" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -44,6 +38,7 @@
       <module name="example_23" options="-parameters" />
       <module name="example_24" options="-parameters" />
       <module name="example_25" options="-parameters" />
+      <module name="example_26" options="-parameters" />
     </option>
   </component>
 </project>
