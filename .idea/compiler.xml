@@ -24,6 +24,7 @@
         <module name="example_19" />
         <module name="example_27" />
         <module name="example_17" />
+        <module name="example_28" />
         <module name="example_25" />
         <module name="example_26" />
       </profile>
@@ -41,6 +42,7 @@
       <module name="example_25" options="-parameters" />
       <module name="example_26" options="-parameters" />
       <module name="example_27" options="-parameters" />
+      <module name="example_28" options="-parameters" />
     </option>
   </component>
 </project>
